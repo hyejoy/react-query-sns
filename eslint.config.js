@@ -3,6 +3,7 @@ import globals from "globals";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
+import react from "eslint-plugin-react";
 
 export default tseslint.config(
   { ignores: ["dist"] },
@@ -16,14 +17,15 @@ export default tseslint.config(
     plugins: {
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
+      react: react,
     },
     rules: {
+      "react/self-closing-comp": ["warn", { component: true, html: true }],
       ...reactHooks.configs.recommended.rules,
       "react-refresh/only-export-components": [
         "warn",
         { allowConstantExport: true },
       ],
-      /* 템플릿 코드에 추가된 부분 */
       "@typescript-eslint/no-unused-vars": "warn",
       "@typescript-eslint/no-explicit-any": "off",
     },
