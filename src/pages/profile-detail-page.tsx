@@ -1,0 +1,7 @@
+export default function ProfileDetailPage() {
+  return (
+    <>
+      <h1>ProfileDetailPage Component</h1>
+    </>
+  );
+}
