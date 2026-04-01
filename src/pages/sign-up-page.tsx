@@ -10,23 +10,30 @@ interface inputForm {
 }
 
 export default function SignUpPage() {
-  const { mutate: signUP } = useSignup();
+  const { mutate: signUP, isSuccess, error } = useSignup();
   const {
     register,
     handleSubmit,
+    resetField,
     formState: { errors },
   } = useForm<inputForm>();
 
   const handleSignUpClick: SubmitHandler<inputForm> = (data) => {
     const { email, password } = data;
     signUP({ email, password });
+
+    if (isSuccess) {
+      alert("회원가입 완료되었습니다.");
+      resetField("email");
+      resetField("password");
+    }
   };
 
   return (
-    <div className="felx felx-col gap-8">
-      <div className="text-xl font-bold">회원가입</div>
+    <div className="flex flex-col gap-9">
+      <div className="flex justify-center text-xl font-bold">회원가입</div>
       <form
-        className="flex flex-col gap-2"
+        className="flex flex-col gap-4"
         onSubmit={handleSubmit(handleSignUpClick)}
       >
         <input
@@ -49,12 +56,13 @@ export default function SignUpPage() {
           <p className="text-red-400">{errors.password.message}</p>
         )}
         <div>
-          <Button className="w-full" type="submit">
+          <Button className="h-15 w-full" type="submit">
             회원가입
           </Button>
         </div>
+        {error && <p className="text-red-500">{error.message}</p>}
       </form>
-      <div>
+      <div className="flex justify-center">
         <Link className="text-muted-foreground hover:underline" to={"/sign-in"}>
           이미 계정이 있다면? 로그인
         </Link>
