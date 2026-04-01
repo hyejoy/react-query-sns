@@ -1,0 +1,103 @@
+import { AuthError } from "@supabase/supabase-js";
+
+export const AUTH_ERROR_MESSAGE_MAP: Record<string, string> = {
+  unexpected_failure: "예상치 못한 오류가 발생했습니다.",
+  validation_failed: "입력값 검증에 실패했습니다.",
+  bad_json: "잘못된 JSON 형식입니다.",
+  email_exists: "이미 사용 중인 이메일입니다.",
+  phone_exists: "이미 사용 중인 전화번호입니다.",
+  bad_jwt: "유효하지 않은 인증 토큰입니다.",
+  not_admin: "관리자 권한이 필요합니다.",
+  no_authorization: "접근 권한이 없습니다.",
+  user_not_found: "사용자를 찾을 수 없습니다.",
+  session_not_found: "세션을 찾을 수 없습니다.",
+  session_expired: "세션이 만료되었습니다.",
+  refresh_token_not_found: "리프레시 토큰을 찾을 수 없습니다.",
+  refresh_token_already_used: "이미 사용된 리프레시 토큰입니다.",
+  flow_state_not_found: "인증 흐름 상태를 찾을 수 없습니다.",
+  flow_state_expired: "인증 흐름 상태가 만료되었습니다.",
+  signup_disabled: "회원가입이 비활성화되어 있습니다.",
+  user_banned: "차단된 사용자입니다.",
+  provider_email_needs_verification: "이메일 인증이 필요합니다.",
+  invite_not_found: "초대를 찾을 수 없습니다.",
+  bad_oauth_state: "잘못된 OAuth 상태입니다.",
+  bad_oauth_callback: "잘못된 OAuth 콜백입니다.",
+  oauth_provider_not_supported: "지원하지 않는 OAuth 제공자입니다.",
+  unexpected_audience: "예상치 못한 대상입니다.",
+  single_identity_not_deletable: "단일 계정은 삭제할 수 없습니다.",
+  email_conflict_identity_not_deletable:
+    "이메일 충돌로 인해 계정을 삭제할 수 없습니다.",
+  identity_already_exists: "이미 존재하는 계정입니다.",
+  email_provider_disabled: "이메일 로그인이 비활성화되어 있습니다.",
+  phone_provider_disabled: "전화번호 로그인이 비활성화되어 있습니다.",
+  too_many_enrolled_mfa_factors: "MFA 인증 수단이 너무 많습니다.",
+  mfa_factor_name_conflict: "MFA 인증 수단 이름이 충돌합니다.",
+  mfa_factor_not_found: "MFA 인증 수단을 찾을 수 없습니다.",
+  mfa_ip_address_mismatch: "MFA IP 주소가 일치하지 않습니다.",
+  mfa_challenge_expired: "MFA 인증 시간이 만료되었습니다.",
+  mfa_verification_failed: "MFA 인증에 실패했습니다.",
+  mfa_verification_rejected: "MFA 인증이 거부되었습니다.",
+  insufficient_aal: "인증 수준이 부족합니다.",
+  captcha_failed: "캡차 인증에 실패했습니다.",
+  saml_provider_disabled: "SAML 제공자가 비활성화되어 있습니다.",
+  manual_linking_disabled: "수동 계정 연결이 비활성화되어 있습니다.",
+  sms_send_failed: "SMS 발송에 실패했습니다.",
+  email_not_confirmed: "이메일 인증이 완료되지 않았습니다.",
+  phone_not_confirmed: "전화번호 인증이 완료되지 않았습니다.",
+  reauth_nonce_missing: "재인증 nonce가 없습니다.",
+  saml_relay_state_not_found: "SAML 릴레이 상태를 찾을 수 없습니다.",
+  saml_relay_state_expired: "SAML 릴레이 상태가 만료되었습니다.",
+  saml_idp_not_found: "SAML ID 제공자를 찾을 수 없습니다.",
+  saml_assertion_no_user_id: "SAML 어설션에 사용자 ID가 없습니다.",
+  saml_assertion_no_email: "SAML 어설션에 이메일이 없습니다.",
+  user_already_exists: "이미 존재하는 사용자입니다.",
+  sso_provider_not_found: "SSO 제공자를 찾을 수 없습니다.",
+  saml_metadata_fetch_failed: "SAML 메타데이터 가져오기에 실패했습니다.",
+  saml_idp_already_exists: "이미 존재하는 SAML ID 제공자입니다.",
+  sso_domain_already_exists: "이미 존재하는 SSO 도메인입니다.",
+  saml_entity_id_mismatch: "SAML 엔티티 ID가 일치하지 않습니다.",
+  conflict: "충돌이 발생했습니다.",
+  provider_disabled: "로그인 제공자가 비활성화되어 있습니다.",
+  user_sso_managed: "SSO로 관리되는 사용자입니다.",
+  reauthentication_needed: "재인증이 필요합니다.",
+  same_password: "현재 비밀번호와 동일합니다.",
+  reauthentication_not_valid: "유효하지 않은 재인증입니다.",
+  otp_expired: "OTP가 만료되었습니다.",
+  otp_disabled: "OTP가 비활성화되어 있습니다.",
+  identity_not_found: "계정 정보를 찾을 수 없습니다.",
+  weak_password: "비밀번호가 너무 약합니다.",
+  over_request_rate_limit: "요청이 너무 많습니다. 잠시 후 다시 시도해주세요.",
+  over_email_send_rate_limit:
+    "이메일 발송 한도를 초과했습니다. 잠시 후 다시 시도해주세요.",
+  over_sms_send_rate_limit:
+    "SMS 발송 한도를 초과했습니다. 잠시 후 다시 시도해주세요.",
+  bad_code_verifier: "잘못된 코드 검증자입니다.",
+  anonymous_provider_disabled: "익명 로그인이 비활성화되어 있습니다.",
+  hook_timeout: "훅 실행 시간이 초과되었습니다.",
+  hook_timeout_after_retry: "재시도 후에도 훅 실행 시간이 초과되었습니다.",
+  hook_payload_over_size_limit: "훅 페이로드 크기가 초과되었습니다.",
+  hook_payload_invalid_content_type:
+    "훅 페이로드 콘텐츠 타입이 유효하지 않습니다.",
+  request_timeout: "요청 시간이 초과되었습니다.",
+  mfa_phone_enroll_not_enabled: "전화번호 MFA 등록이 비활성화되어 있습니다.",
+  mfa_phone_verify_not_enabled: "전화번호 MFA 인증이 비활성화되어 있습니다.",
+  mfa_totp_enroll_not_enabled: "TOTP MFA 등록이 비활성화되어 있습니다.",
+  mfa_totp_verify_not_enabled: "TOTP MFA 인증이 비활성화되어 있습니다.",
+  mfa_webauthn_enroll_not_enabled: "WebAuthn MFA 등록이 비활성화되어 있습니다.",
+  mfa_webauthn_verify_not_enabled: "WebAuthn MFA 인증이 비활성화되어 있습니다.",
+  mfa_verified_factor_exists: "이미 인증된 MFA 수단이 존재합니다.",
+  invalid_credentials: "이메일 또는 비밀번호가 올바르지 않습니다.",
+  email_address_not_authorized: "허용되지 않은 이메일 주소입니다.",
+  email_address_invalid: "유효하지 않은 이메일 주소입니다.",
+};
+
+export function generateErrorMessage(error: unknown) {
+  if (error instanceof AuthError && error.code) {
+    return (
+      AUTH_ERROR_MESSAGE_MAP[error.code] ??
+      "알 수 없는 인증 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+    );
+  }
+
+  return "문제가 발생했습니다. 잠시 후 다시 시도해주세요.";
+}

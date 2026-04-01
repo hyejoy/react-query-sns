@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { useSignup } from "@/hooks/mutations/use-sign-up";
+import { generateErrorMessage } from "@/lib/error";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Link } from "react-router";
-import { signUP } from "@/api/auth";
+import { toast } from "sonner";
 
 interface inputForm {
   email: string;
@@ -10,14 +11,7 @@ interface inputForm {
 }
 
 export default function SignUpPage() {
-  const { mutate: signUP, isSuccess, error } = useSignup();
-  const {
-    register,
-    handleSubmit,
-    resetField,
-    formState: { errors },
-  } = useForm<inputForm>();
-
+  /** react hook form */
   const handleSignUpClick: SubmitHandler<inputForm> = (data) => {
     const { email, password } = data;
     signUP({ email, password });
@@ -28,6 +22,26 @@ export default function SignUpPage() {
       resetField("password");
     }
   };
+
+  /** mutation  */
+  const {
+    mutate: signUP,
+    isSuccess,
+    isPending: isSignUpPending,
+  } = useSignup({
+    onError: (error) => {
+      const message = generateErrorMessage(error);
+      toast.error(message, {
+        position: "top-center",
+      });
+    },
+  });
+  const {
+    register,
+    handleSubmit,
+    resetField,
+    formState: { errors },
+  } = useForm<inputForm>();
 
   return (
     <div className="flex flex-col gap-9">
@@ -56,11 +70,14 @@ export default function SignUpPage() {
           <p className="text-red-400">{errors.password.message}</p>
         )}
         <div>
-          <Button className="h-15 w-full" type="submit">
+          <Button
+            className="h-15 w-full"
+            type="submit"
+            disabled={isSignUpPending}
+          >
             회원가입
           </Button>
         </div>
-        {error && <p className="text-red-500">{error.message}</p>}
       </form>
       <div className="flex justify-center">
         <Link className="text-muted-foreground hover:underline" to={"/sign-in"}>
